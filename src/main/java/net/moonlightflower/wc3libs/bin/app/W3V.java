@@ -1,1102 +1,135 @@
 package net.moonlightflower.wc3libs.bin.app;
 
+import net.moonlightflower.wc3libs.bin.*;
+
+import javax.annotation.Nonnull;
+import java.io.*;
+
 /**
  * gamecache file
  */
-public class W3V {	
-//	public static class Cache extends Bin {
-//		private static class State<T extends DataType> extends BinState<T> {
-//			private static final List<State> _values = new ArrayList<>();
-//
-//			public static List<State> values() {
-//				return _values;
-//			}
-//
-//			/*public T get() {
-//				return Rect.this.get(this);
-//			}
-//
-//			public void set(T val) {
-//				Rect.this.set(this, val);
-//			}*/
-//
-//			public State(DataTypeInfo typeInfo, String idString, T defVal) {
-//				super(typeInfo, idString, defVal);
-//
-//				_values.add(this);
-//			}
-//
-//			public State(DataTypeInfo typeInfo, String idString) {
-//				this(typeInfo, idString, null);
-//			}
-//
-//			public State(Class<T> type, String idString) {
-//				this(new DataTypeInfo(type), idString);
-//			}
-//
-//			public State(Class<T> type, String idString, T defVal) {
-//				this(new DataTypeInfo(type), idString, defVal);
-//			}
-//		}
-//
-//		public final static State<War3String> NAME = new State<>(War3String.class, "name");
-//		public final static State<War3Int> RESERVED = new State<>(War3Int.class, "reserved");
-//
-//		public <T extends DataType> T get(State<T> state) {
-//			return state.tryCastVal(super.get(state));
-//		}
-//
-//		public <T extends DataType> void set(State<T> state, T val) {
-//			super.set(state, val);
-//		}
-//
-//		public <T extends DataType> void remove(State<T> state) {
-//			super.set(state, null);
-//		}
-//
-//		public static class Cat extends Bin {
-//			private static class State<T extends DataType> extends BinState<T> {
-//				private static final List<State> _values = new ArrayList<>();
-//
-//				public static List<State> values() {
-//					return _values;
-//				}
-//
-//				/*public T get() {
-//					return Rect.this.get(this);
-//				}
-//
-//				public void set(T val) {
-//					Rect.this.set(this, val);
-//				}*/
-//
-//				public State(DataTypeInfo typeInfo, String idString, T defVal) {
-//					super(typeInfo, idString, defVal);
-//
-//					_values.add(this);
-//				}
-//
-//				public State(DataTypeInfo typeInfo, String idString) {
-//					this(typeInfo, idString, null);
-//				}
-//
-//				public State(Class<T> type, String idString) {
-//					this(new DataTypeInfo(type), idString);
-//				}
-//
-//				public State(Class<T> type, String idString, T defVal) {
-//					this(new DataTypeInfo(type), idString, defVal);
-//				}
-//			}
-//
-//			public final static State<War3String> NAME = new State<>(War3String.class, "name");
-//			public final static State<War3Int> CUSTOM_VAR_TYPES = new State<>(War3Int.class, "customVarTypes");
-//
-//			public <T extends DataType> T get(State<T> state) {
-//				return state.tryCastVal(super.get(state));
-//			}
-//
-//			public <T extends DataType> void set(State<T> state, T val) {
-//				super.set(state, val);
-//			}
-//
-//			public <T extends DataType> void remove(State<T> state) {
-//				super.set(state, null);
-//			}
-//
-//			public abstract static class Entry extends Bin {
-//				private static class State<T extends DataType> extends BinState<T> {
-//					private static final List<State> _values = new ArrayList<>();
-//
-//					public static List<State> values() {
-//						return _values;
-//					}
-//
-//					/*public T get() {
-//						return Rect.this.get(this);
-//					}
-//
-//					public void set(T val) {
-//						Rect.this.set(this, val);
-//					}*/
-//
-//					public State(DataTypeInfo typeInfo, String idString, T defVal) {
-//						super(typeInfo, idString, defVal);
-//
-//						_values.add(this);
-//					}
-//
-//					public State(DataTypeInfo typeInfo, String idString) {
-//						this(typeInfo, idString, null);
-//					}
-//
-//					public State(Class<T> type, String idString) {
-//						this(new DataTypeInfo(type), idString);
-//					}
-//
-//					public State(Class<T> type, String idString, T defVal) {
-//						this(new DataTypeInfo(type), idString, defVal);
-//					}
-//				}
-//
-//				public final static State<War3String> LABEL = new State<>(War3String.class, "label");
-//
-//				public <T extends DataType> T get(State<T> state) {
-//					return state.tryCastVal(super.get(state));
-//				}
-//
-//				public <T extends DataType> void set(State<T> state, T val) {
-//					super.set(state, val);
-//				}
-//
-//				public <T extends DataType> void remove(State<T> state) {
-//					super.set(state, null);
-//				}
-//
-//				public void print() {
-//					System.out.println(String.format("%s: %s", get(LABEL).getVal(), toString()));
-//				}
-//			}
-//
-//			public static class IntEntry extends Entry {
-//				public final static State<War3Int> VAL = new State<>(War3Int.class, "val");
-//
-//				@Override
-//				public String toString() {
-//					return Integer.toString(((War3Int) get(VAL)).toInt());
-//				}
-//
-//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//					set(LABEL, stream.readWc3String());
-//					set(VAL, stream.readWc3Int());
-//				}
-//
-//				public void write_0x0(Wc3BinInputStream stream) {
-//					stream.writeString(get(LABEL));
-//					stream.writeInt(get(VAL));
-//				}
-//
-//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					switch (format.toEnum()) {
-//					case W3V_0x0:
-//						read_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//					switch (format.toEnum()) {
-//					case AUTO:
-//					case W3V_0x0:
-//						write_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public IntEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					read(stream, format);
-//				}
-//
-//				public IntEntry() {
-//				}
-//			}
-//
-//			private List<IntEntry> _ints = new ArrayList<>();
-//
-//			public List<IntEntry> getIntEntries() {
-//				return new ArrayList<>(_ints);
-//			}
-//
-//			private void addIntEntry(IntEntry val) {
-//				_ints.add(val);
-//			}
-//
-//			public IntEntry addIntEntry() {
-//				IntEntry entry = new IntEntry();
-//
-//				addIntEntry(entry);
-//
-//				return entry;
-//			}
-//
-//			public static class RealEntry extends Entry {
-//				public final static State<War3Real> VAL = new State<>(War3Real.class, "val");
-//
-//				@Override
-//				public String toString() {
-//					return Float.toString(((War3Real) get(VAL)).toFloat());
-//				}
-//
-//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//					set(LABEL, stream.readWc3String());
-//					set(VAL, stream.readReal());
-//				}
-//
-//				public void write_0x0(Wc3BinInputStream stream) {
-//					stream.writeString(get(LABEL));
-//					stream.writeReal(get(VAL));
-//				}
-//
-//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					switch (format.toEnum()) {
-//					case W3V_0x0:
-//						read_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//					switch (format.toEnum()) {
-//					case AUTO:
-//					case W3V_0x0:
-//						write_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public RealEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					read(stream, format);
-//				}
-//
-//				public RealEntry() {
-//				}
-//			}
-//
-//			private List<RealEntry> _reals = new ArrayList<>();
-//
-//			public List<RealEntry> getRealEntries() {
-//				return new ArrayList<>(_reals);
-//			}
-//
-//			private void addRealEntry(RealEntry val) {
-//				_reals.add(val);
-//			}
-//
-//			public RealEntry addRealEntry() {
-//				RealEntry entry = new RealEntry();
-//
-//				addRealEntry(entry);
-//
-//				return entry;
-//			}
-//
-//			public static class BoolEntry extends Entry {
-//				public final static State<War3Bool> VAL = new State<>(War3Bool.class, "val");
-//
-//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//					set(LABEL, stream.readWc3String());
-//					set(VAL, War3Bool.valueOf(((stream.readInt32()) > 0)));
-//				}
-//
-//				public void write_0x0(Wc3BinInputStream stream) {
-//					stream.writeString(get(LABEL));
-//					stream.writeInt(((War3Bool) get(VAL)).getVal() ? 1 : 0);
-//				}
-//
-//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					switch (format.toEnum()) {
-//					case W3V_0x0:
-//						read_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//					switch (format.toEnum()) {
-//					case AUTO:
-//					case W3V_0x0:
-//						write_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				@Override
-//				public String toString() {
-//					return Boolean.toString(((War3Bool) get(VAL)).getVal());
-//				}
-//
-//				public BoolEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					read(stream, format);
-//				}
-//
-//				public BoolEntry() {
-//				}
-//			}
-//
-//			private List<BoolEntry> _bools = new ArrayList<>();
-//
-//			public List<BoolEntry> getBoolEntries() {
-//				return new ArrayList<>(_bools);
-//			}
-//
-//			private void addBoolEntry(BoolEntry val) {
-//				_bools.add(val);
-//			}
-//
-//			public BoolEntry addBoolEntry() {
-//				BoolEntry entry = new BoolEntry();
-//
-//				addBoolEntry(entry);
-//
-//				return entry;
-//			}
-//
-//			public static class UnitEntry extends Entry {
-//				public final static State<UnitId> ID = new State<>(UnitId.class, "id");
-//				public final static State<War3Int> EXP = new State<>(War3Int.class, "exp");
-//				public final static State<War3Int> LEVEL = new State<>(War3Int.class, "level");
-//				public final static State<War3Int> UNUSED_SKILL_PTS = new State<>(War3Int.class, "unusedSkillPts");
-//
-//				public static class InvSlot extends Bin {
-//					private static class State<T extends DataType> extends BinState<T> {
-//						private static final List<State> _values = new ArrayList<>();
-//
-//						public static List<State> values() {
-//							return _values;
-//						}
-//
-//						/*public T get() {
-//							return Rect.this.get(this);
-//						}
-//
-//						public void set(T val) {
-//							Rect.this.set(this, val);
-//						}*/
-//
-//						public State(DataTypeInfo typeInfo, String idString, T defVal) {
-//							super(typeInfo, idString, defVal);
-//
-//							_values.add(this);
-//						}
-//
-//						public State(DataTypeInfo typeInfo, String idString) {
-//							this(typeInfo, idString, null);
-//						}
-//
-//						public State(Class<T> type, String idString) {
-//							this(new DataTypeInfo(type), idString);
-//						}
-//
-//						public State(Class<T> type, String idString, T defVal) {
-//							this(new DataTypeInfo(type), idString, defVal);
-//						}
-//					}
-//
-//					public <T extends DataType> T get(State<T> state) {
-//						return state.tryCastVal(super.get(state));
-//					}
-//
-//					public <T extends DataType> void set(State<T> state, T val) {
-//						super.set(state, val);
-//					}
-//
-//					public <T extends DataType> void remove(State<T> state) {
-//						super.set(state, null);
-//					}
-//
-//					public final static State<ItemId> ID = new State<>(ItemId.class, "id");
-//					public final static State<War3Int> CHARGES = new State<>(War3Int.class, "charges");
-//					public final static State<War3Int> UNKNOWN = new State<>(War3Int.class, "unknown");
-//
-//					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//						set(LABEL, ItemId.valueOf(stream.readId()));
-//						set(CHARGES, stream.readWc3Int());
-//						set(UNKNOWN, stream.readWc3Int());
-//					}
-//
-//					public void write_0x0(Wc3BinInputStream stream) {
-//						stream.writeId((ItemId) get(LABEL));
-//						stream.writeInt(get(CHARGES));
-//						stream.writeInt(get(UNKNOWN));
-//					}
-//
-//					public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//						switch (format.toEnum()) {
-//						case W3V_0x0:
-//							read_0x0(stream);
-//
-//							break;
-//						}
-//					}
-//
-//					public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//						switch (format.toEnum()) {
-//						case AUTO:
-//						case W3V_0x0:
-//							write_0x0(stream);
-//
-//							break;
-//						}
-//					}
-//
-//					public InvSlot(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//						read(stream, format);
-//					}
-//
-//					public InvSlot() {
-//					}
-//				}
-//
-//				private List<InvSlot> _invSlots = new ArrayList<>();
-//
-//				public List<InvSlot> getInvSlots() {
-//					return new ArrayList<>(_invSlots);
-//				}
-//
-//				private void addInvSlot(InvSlot val) {
-//					_invSlots.add(val);
-//				}
-//
-//				public InvSlot addInvSlot() {
-//					InvSlot slot = new InvSlot();
-//
-//					addInvSlot(slot);
-//
-//					return slot;
-//				}
-//
-//				public static class HeroSkill extends Bin {
-//					private static class State<T extends DataType> extends BinState<T> {
-//						private static final List<State> _values = new ArrayList<>();
-//
-//						public static List<State> values() {
-//							return _values;
-//						}
-//
-//						/*public T get() {
-//							return Rect.this.get(this);
-//						}
-//
-//						public void set(T val) {
-//							Rect.this.set(this, val);
-//						}*/
-//
-//						public State(DataTypeInfo typeInfo, String idString, T defVal) {
-//							super(typeInfo, idString, defVal);
-//
-//							_values.add(this);
-//						}
-//
-//						public State(DataTypeInfo typeInfo, String idString) {
-//							this(typeInfo, idString, null);
-//						}
-//
-//						public State(Class<T> type, String idString) {
-//							this(new DataTypeInfo(type), idString);
-//						}
-//
-//						public State(Class<T> type, String idString, T defVal) {
-//							this(new DataTypeInfo(type), idString, defVal);
-//						}
-//					}
-//
-//					public <T extends DataType> T get(State<T> state) {
-//						return state.tryCastVal(super.get(state));
-//					}
-//
-//					public <T extends DataType> void set(State<T> state, T val) {
-//						super.set(state, val);
-//					}
-//
-//					public <T extends DataType> void remove(State<T> state) {
-//						super.set(state, null);
-//					}
-//
-//					public final static State<AbilId> ID = new State<>(AbilId.class, "id");
-//					public final static State<War3Int> LEVEL = new State<>(War3Int.class, "level");
-//
-//					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//						set(ID, AbilId.valueOf(stream.readId()));
-//						set(LEVEL, stream.readWc3Int());
-//					}
-//
-//					public void write_0x0(Wc3BinInputStream stream) {
-//						stream.writeId(get(ID));
-//						stream.writeInt(get(LEVEL));
-//					}
-//
-//					public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//						switch (format.toEnum()) {
-//						case W3V_0x0:
-//							read_0x0(stream);
-//
-//							break;
-//						}
-//					}
-//
-//					public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//						switch (format.toEnum()) {
-//						case AUTO:
-//						case W3V_0x0:
-//							write_0x0(stream);
-//
-//							break;
-//						}
-//					}
-//
-//					public HeroSkill(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//						read(stream, format);
-//					}
-//
-//					public HeroSkill() {
-//					}
-//				}
-//
-//				private List<HeroSkill> _heroSkills = new ArrayList<>();
-//
-//				public List<HeroSkill> getHeroSkills() {
-//					return new ArrayList<>(_heroSkills);
-//				}
-//
-//				private void addHeroSkill(HeroSkill val) {
-//					_heroSkills.add(val);
-//				}
-//
-//				public HeroSkill addHeroSkill() {
-//					HeroSkill skill = new HeroSkill();
-//
-//					addHeroSkill(skill);
-//
-//					return skill;
-//				}
-//
-//				@Override
-//				public String toString() {
-//					return get(LABEL).getVal();
-//				}
-//
-//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//					set(LABEL, stream.readWc3String());
-//					set(ID, UnitId.valueOf(stream.readId()));
-//
-//					int invSlots = stream.readInt32();
-//
-//					for (int i = 0; i < invSlots; i++) {
-//						addInvSlot(new InvSlot(stream, EncodingFormat.W3V_0x0));
-//					}
-//
-//					set(EXP, stream.readWc3Int());
-//					set(LEVEL, stream.readWc3Int());
-//					set(UNUSED_SKILL_PTS, stream.readWc3Int());
-//
-//					for (int i = 0; i < 9; i++) {
-//						stream.readInt32();
-//					}
-//
-//					int heroSkills = stream.readInt32();
-//
-//					for (int i = 0; i < heroSkills; i++) {
-//						addHeroSkill(new HeroSkill(stream, EncodingFormat.W3V_0x0));
-//					}
-//
-//					for (int i = 0; i < 2; i++) {
-//						stream.readInt32();
-//					}
-//
-//					stream.readFloat32();
-//
-//					for (int i = 0; i < 4; i++) {
-//						stream.readInt32();
-//					}
-//
-//					stream.readInt16();
-//				}
-//
-//				public void write_0x0(Wc3BinInputStream stream) {
-//					stream.writeString(get(LABEL));
-//					stream.writeId(get(ID));
-//
-//					stream.writeInt(_invSlots.size());
-//
-//					for (InvSlot slot : _invSlots) {
-//						slot.write(stream, EncodingFormat.W3V_0x0);
-//					}
-//
-//					stream.writeInt(get(EXP));
-//					stream.writeInt(get(LEVEL));
-//					stream.writeInt(get(UNUSED_SKILL_PTS));
-//
-//					for (int i = 0; i < 9; i++) {
-//						stream.writeInt(0);
-//					}
-//
-//					stream.writeInt(_heroSkills.size());
-//
-//					for (HeroSkill skill : _heroSkills) {
-//						skill.write(stream, EncodingFormat.W3V_0x0);
-//					}
-//
-//					for (int i = 0; i < 2; i++) {
-//						stream.writeInt(0);
-//					}
-//
-//					stream.writeFloat(0F);
-//
-//					for (int i = 0; i < 4; i++) {
-//						stream.writeInt(0);
-//					}
-//
-//					stream.writeShort((short) 0);
-//				}
-//
-//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					switch (format.toEnum()) {
-//					case W3V_0x0:
-//						read_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//					switch (format.toEnum()) {
-//					case AUTO:
-//					case W3V_0x0:
-//						write_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public UnitEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					read(stream, format);
-//				}
-//
-//				public UnitEntry() {
-//				}
-//			}
-//
-//			private List<UnitEntry> _units = new ArrayList<>();
-//
-//			public List<UnitEntry> getUnitEntries() {
-//				return new ArrayList<>(_units);
-//			}
-//
-//			private void addUnitEntry(UnitEntry val) {
-//				_units.add(val);
-//			}
-//
-//			public UnitEntry addUnitEntry() {
-//				UnitEntry entry = new UnitEntry();
-//
-//				addUnitEntry(entry);
-//
-//				return entry;
-//			}
-//
-//			public static class StringEntry extends Entry {
-//				public final static State<War3String> VAL = new State<>(War3String.class, "val");
-//
-//				@Override
-//				public String toString() {
-//					return ((War3String) get(VAL)).getVal();
-//				}
-//
-//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//					set(LABEL, stream.readWc3String());
-//					set(VAL, stream.readWc3String());
-//				}
-//
-//				public void write_0x0(Wc3BinInputStream stream) {
-//				}
-//
-//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					switch (format.toEnum()) {
-//					case W3V_0x0:
-//						read_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//					switch (format.toEnum()) {
-//					case AUTO:
-//					case W3V_0x0:
-//						write_0x0(stream);
-//
-//						break;
-//					}
-//				}
-//
-//				public StringEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//					read(stream, format);
-//				}
-//
-//				public StringEntry() {
-//				}
-//			}
-//
-//			private List<StringEntry> _strings = new ArrayList<>();
-//
-//			public List<StringEntry> getStringEntries() {
-//				return new ArrayList<>(_strings);
-//			}
-//
-//			private void addStringEntry(StringEntry val) {
-//				_strings.add(val);
-//			}
-//
-//			public StringEntry addStringEntry() {
-//				StringEntry entry = new StringEntry();
-//
-//				addStringEntry(entry);
-//
-//				return entry;
-//			}
-//
-//			public void print() {
-//				System.out.println(String.format("cat: %s", get(NAME)));
-//
-//				for (IntEntry entry : _ints) {
-//					entry.print();
-//				}
-//				for (RealEntry entry : _reals) {
-//					entry.print();
-//				}
-//				for (BoolEntry entry : _bools) {
-//					entry.print();
-//				}
-//				for (UnitEntry entry : _units) {
-//					entry.print();
-//				}
-//				for (StringEntry entry : _strings) {
-//					entry.print();
-//				}
-//			}
-//
-//			public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//				set(NAME, stream.readWc3String());
-//
-//				for (int i = 0; i < 5; i++) {
-//					stream.readWc3Int();
-//				}
-//
-//				//set(RESERVED, stream.readWc3Int());
-//
-//				int intsCount = stream.readInt32();
-//
-//				for (int i = 0; i < intsCount; i++) {
-//					addIntEntry(new IntEntry(stream, EncodingFormat.W3V_0x0));
-//				}
-//
-//				int realsCount = stream.readInt32();
-//
-//				for (int i = 0; i < realsCount; i++) {
-//					addRealEntry(new RealEntry(stream, EncodingFormat.W3V_0x0));
-//				}
-//
-//				int boolsCount = stream.readInt32();
-//
-//				for (int i = 0; i < boolsCount; i++) {
-//					addBoolEntry(new BoolEntry(stream, EncodingFormat.W3V_0x0));
-//				}
-//
-//				int unitsCount = stream.readInt32();
-//
-//				for (int i = 0; i < unitsCount; i++) {
-//					addUnitEntry(new UnitEntry(stream, EncodingFormat.W3V_0x0));
-//				}
-//
-//				int stringsCount = stream.readInt32();
-//
-//				for (int i = 0; i < stringsCount; i++) {
-//					addStringEntry(new StringEntry(stream, EncodingFormat.W3V_0x0));
-//				}
-//			}
-//
-//			public void write_0x0(Wc3BinInputStream stream) {
-//				stream.writeString(get(NAME));
-//
-//				for (int i = 0; i < 5; i++) {
-//					stream.writeInt(0);
-//				}
-//
-//				stream.writeInt(_ints.size());
-//
-//				for (IntEntry entry : _ints) {
-//					entry.write(stream, EncodingFormat.W3V_0x0);
-//				}
-//
-//				stream.writeInt(_reals.size());
-//
-//				for (RealEntry entry : _reals) {
-//					entry.write(stream, EncodingFormat.W3V_0x0);
-//				}
-//
-//				stream.writeInt(_bools.size());
-//
-//				for (BoolEntry entry : _bools) {
-//					entry.write(stream, EncodingFormat.W3V_0x0);
-//				}
-//
-//				stream.writeInt(_units.size());
-//
-//				for (UnitEntry entry : _units) {
-//					entry.write(stream, EncodingFormat.W3V_0x0);
-//				}
-//
-//				stream.writeInt(_strings.size());
-//
-//				for (StringEntry entry : _strings) {
-//					entry.write(stream, EncodingFormat.W3V_0x0);
-//				}
-//			}
-//
-//			public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//				switch (format.toEnum()) {
-//				case W3V_0x0:
-//					read_0x0(stream);
-//
-//					break;
-//				}
-//			}
-//
-//			public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//				switch (format.toEnum()) {
-//				case AUTO:
-//				case W3V_0x0:
-//					write_0x0(stream);
-//
-//					break;
-//				}
-//			}
-//
-//			public Cat(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//				read(stream, format);
-//			}
-//
-//			public Cat() {
-//			}
-//		}
-//
-//		private List<Cat> _cats = new ArrayList<>();
-//
-//		public List<Cat> getCats() {
-//			return new ArrayList<>(_cats);
-//		}
-//
-//		private void addCat(Cat val) {
-//			_cats.add(val);
-//		}
-//
-//		public Cat addCat() {
-//			Cat cat = new Cat();
-//
-//			addCat(cat);
-//
-//			return cat;
-//		}
-//
-//		public void print() {
-//			System.out.println(String.format("gc: %s", get(NAME)));
-//
-//			for (Cat cat : _cats) {
-//				cat.print();
-//			}
-//		}
-//
-//		public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//			set(NAME, stream.readWc3String());
-//			set(RESERVED, stream.readWc3Int());
-//
-//			int catsCount = stream.readInt32();
-//
-//			for (int i = 0; i < catsCount; i++) {
-//				addCat(new Cat(stream, EncodingFormat.W3V_0x0));
-//			}
-//		}
-//
-//		public void write_0x0(Wc3BinInputStream stream) {
-//			stream.writeString(get(NAME));
-//			stream.writeInt(get(RESERVED));
-//
-//			stream.writeInt(_cats.size());
-//
-//			for (Cat cat : _cats) {
-//				cat.write(stream, EncodingFormat.W3V_0x0);
-//			}
-//		}
-//
-//		public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//			switch (format.toEnum()) {
-//			case W3V_0x0:
-//				read_0x0(stream);
-//
-//				break;
-//			}
-//		}
-//
-//		public void write(Wc3BinInputStream stream, EncodingFormat format) {
-//			switch (format.toEnum()) {
-//			case AUTO:
-//			case W3V_0x0:
-//				write_0x0(stream);
-//
-//				break;
-//			}
-//		}
-//
-//		public Cache(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//			read(stream, format);
-//		}
-//
-//		public Cache() {
-//		}
-//	}
-//
-//	private List<Cache> _caches = new ArrayList<>();
-//
-//	public List<Cache> getCaches() {
-//		return new ArrayList<>(_caches);
-//	}
-//
-//	private void addCache(Cache val) {
-//		_caches.add(val);
-//	}
-//
-//	public Cache addCache() {
-//		Cache cache = new Cache();
-//
-//		addCache(cache);
-//
-//		return cache;
-//	}
-//
-//	public void print() {
-//		for (Cache cache : _caches) {
-//			cache.print();
-//		}
-//	}
-//
-//	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-//		enum Enum {
-//			AUTO,
-//			W3V_0x0
-//		}
-//
-//		static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-//
-//		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
-//		public final static EncodingFormat W3V_0x0 = new EncodingFormat(Enum.W3V_0x0, 0x0);
-//
-//		public static EncodingFormat valueOf(int version) {
-//			return _map.get(version);
-//		}
-//
-//		private EncodingFormat(Enum enumVal, int version) {
-//			super(enumVal, version);
-//
-//			_map.put(version, this);
-//		}
-//	}
-//
-//	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//		stream = Packed.decompress(stream);
-//
-//		int version = stream.readInt32();
-//
-//		Wc3BinInputStream.checkFormatVersion("gamecacheMaskFunc", EncodingFormat.W3V_0x0.getVersion(), version);
-//
-//		int cachesCount = stream.readInt32();
-//
-//		for (int i = 0; i < cachesCount; i++) {
-//			addCache(new Cache(stream, EncodingFormat.W3V_0x0));
-//		}
-//	}
-//
-//	public void write_0x0(Wc3BinInputStream stream) throws StreamException {
-//		Wc3BinInputStream outStream = stream;
-//
-//		stream = new Wc3BinInputStream();
-//
-//		stream.writeInt(EncodingFormat.W3V_0x0.getVersion());
-//
-//		stream.writeInt(_caches.size());
-//
-//		for (Cache cache : _caches) {
-//			cache.write(stream, EncodingFormat.W3V_0x0);
-//		}
-//
-//		Wc3BinInputStream packStream = Packed.compress(stream);
-//
-//		while (!packStream.eof()) {
-//			outStream.writeBytes(packStream.readBytes(Math.min(1024, packStream.size() - packStream.getPos())));
-//		}
-//	}
-//
-//	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//		int version = stream.readInt32();
-//
-//		stream.rewind();
-//
-//		System.out.println(version);
-//
-//		read(stream, EncodingFormat.valueOf(version));
-//	}
-//
-//	private void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
-//		format = EncodingFormat.W3V_0x0;
-//
-//		switch (format.toEnum()) {
-//		case AUTO: {
-//			read_auto(stream);
-//
-//			break;
-//		}
-//		case W3V_0x0: {
-//			read_0x0(stream);
-//
-//			break;
-//		}
-//		}
-//	}
-//
-//	private void write(Wc3BinInputStream stream, EncodingFormat format) throws StreamException {
-//		switch (format.toEnum()) {
-//		case AUTO:
-//		case W3V_0x0: {
-//			write_0x0(stream);
-//
-//			break;
-//		}
-//		}
-//	}
-//
-//	private void read(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//		read(stream, EncodingFormat.AUTO);
-//	}
-//
-//	private void write(Wc3BinInputStream stream) throws StreamException {
-//		write(stream, EncodingFormat.AUTO);
-//	}
-//
-//	private void read(File file, EncodingFormat format) throws IOException {
-//		read(new Wc3BinInputStream(file), format);
-//	}
-//
-//	public void write(File file, EncodingFormat format) throws IOException {
-//		write(new Wc3BinInputStream(file), format);
-//	}
-//
-//	private void read(File file) throws IOException {
-//		read(file, EncodingFormat.AUTO);
-//	}
-//
-//	public void write(File file) throws IOException {
-//		write(new Wc3BinInputStream(file));
-//	}
-//
-//	public W3V() {
-//	}
-//
-//	public W3V(File file) throws IOException {
-//		read(file);
-//	}
+public class W3V extends W3VUncompressed {
+	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+        super.read_0x0(ZCompression.decompress(stream));
+	}
+
+    public void read_0xFF(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+        super.read_0xFF(ZCompression.decompress(stream));
+    }
+
+	public void write_0x0(Wc3BinOutputStream stream) throws BinStream.StreamException {
+        Wc3BinOutputStream uncompressedStream = new Wc3BinOutputStream(new ByteArrayOutputStream());
+        super.write_0x0(uncompressedStream);
+        stream.writeBytes(ZCompression.compress(uncompressedStream.getBytes()));
+	}
+
+    public void write_0xFF(Wc3BinOutputStream stream) throws BinStream.StreamException {
+        Wc3BinOutputStream uncompressedStream = new Wc3BinOutputStream(new ByteArrayOutputStream());
+        super.write_0xFF(uncompressedStream);
+        stream.writeBytes(ZCompression.compress(uncompressedStream.getBytes()));
+    }
+
+    private void write_as_defined(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        switch (_format.toEnum()) {
+            case W3V_0x0: {
+                write_0x0(stream);
+
+                break;
+            }
+            case W3V_0xFF: {
+                write_0xFF(stream);
+
+                break;
+            }
+        }
+    }
+
+	private void read_as_defined(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+        Wc3BinInputStream uncompressedStream = ZCompression.decompress(stream);
+
+        stream.rewind();
+
+		int version = uncompressedStream.readInt32("version");
+
+        EncodingFormat format = EncodingFormat.valueOf(version);
+
+        if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
+	}
+
+	public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+		switch (format.toEnum()) {
+        case AUTO:
+        case AS_DEFINED: {
+            read_as_defined(stream);
+
+            break;
+        }
+        case W3V_0xFF:
+            read_0xFF(stream);
+
+            break;
+		case W3V_0x0: {
+			read_0x0(stream);
+
+			break;
+		}
+		}
+	}
+
+	public void write(Wc3BinOutputStream stream, EncodingFormat format) throws BinStream.StreamException {
+		switch (format.toEnum()) {
+        case AS_DEFINED: {
+            write_as_defined(stream);
+
+            break;
+        }
+        case AUTO:
+        case W3V_0xFF:
+            write_0xFF(stream);
+
+            break;
+		case W3V_0x0: {
+			write_0x0(stream);
+
+			break;
+		}
+		}
+	}
+
+	public void read(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		read(stream, EncodingFormat.AUTO);
+	}
+
+	public void write(Wc3BinOutputStream stream) throws BinOutputStream.StreamException {
+		write(stream, EncodingFormat.AUTO);
+	}
+
+	public void read(File file, EncodingFormat format) throws IOException {
+		read(new Wc3BinInputStream(file), format);
+	}
+
+	public void write(File file, EncodingFormat format) throws IOException {
+		write(new Wc3BinOutputStream(file), format);
+	}
+
+	public void read(File file) throws IOException {
+		read(file, EncodingFormat.AUTO);
+	}
+
+	public void write(File file) throws IOException {
+		write(new Wc3BinOutputStream(file));
+	}
+
+    public W3V(@Nonnull Wc3BinInputStream stream) throws Exception {
+        read(stream);
+    }
+
+	public W3V(File file) throws IOException {
+		read(file);
+	}
+
+    public W3V() {
+    }
 }

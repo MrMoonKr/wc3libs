@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.bin;
 import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,6 +15,16 @@ public class BinOutputStream extends BinStream implements AutoCloseable {
         for (long i = 1; i <= toAdd; i++) {
             _bytes.add(null);
         }
+    }
+
+    public byte[] getBytes() {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        for (long i = 0; i < size(); i++) {
+            byteArrayOutputStream.write(get(i));
+        }
+
+        return byteArrayOutputStream.toByteArray();
     }
 
     public void writeByte(byte val) {
